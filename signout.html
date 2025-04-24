@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>signout</title>
+  <style>
+    *{
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+
+    }
+    body{
+      font-family: Arial, sans-serif;
+      background-color: #f3f2ef;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    h2{
+      margin-bottom: 20px;
+      font-weight: 400;
+      font-size: 2rem;
+    }
+    #signOutBtn{
+      background-color: #0a66c2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    } 
+    #signOutBtn:hover{
+      background-color: #004182;
+    }
+  </style>
+</head>
+<body>
+  <h2>Welcome to your Dashboard</h2>
+  <p id="userEmail"></p>
+  <button id="signOutBtn">Sign Out</button>
+
+  <script src="signout.js"type="module"></script>
+  <script src="auth.js"type="module"></script>
+</body>
+</html>
