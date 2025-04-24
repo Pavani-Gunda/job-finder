@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Page</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  background-color: #f3f2ef;
+  height: 100vh;
+  display: flex;
+  position: relative; /* Added position relative for absolute positioning of child elements */
+}
+
+
+.nav {
+  max-width: 1128px;
+  margin: 0 auto;
+  padding: 12px 0 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 38%;
+  left: 22%;
+  margin-top: 10px;
+
+}
+
+.nav > a img {
+  width: 130px;
+  height: 35px;
+}
+
+.join {
+  font-size: 16px;
+  padding: 10px;
+  text-decoration: none;
+  border-radius: 5px;
+  color: rgba(0, 0, 0, 0.866);
+  margin-right: 8px;
+  box-shadow: inset 0 0 0 1px #0a66c2;
+  border-radius: 25px;
+}
+
+.join:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 1);
+}
+
+.sign-in {
+  box-shadow: inset 0 0 0 1px #0a66c2;
+  border-radius: 25px;
+  color: #0a66c2;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 40px;
+  padding: 10px 25px;
+  text-align: center;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.sign-in:hover {
+  background-color: rgba(112, 181, 249, 0.15);
+  box-shadow: inset 0 0 0 2px #0a66c2;
+}
+
+.section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  max-width: 1128px;
+  margin: auto;
+  padding: 60px 0;
+}
+
+.hero {
+  width: 100%;
+  position: relative;
+}
+
+.hero h1 {
+  width: 55%;
+  font-size: 56px;
+  color: #2977c9;
+  font-weight: 200;
+  line-height: 70px;
+  margin: 0px;
+  top: 0px;
+ 
+}
+
+.hero img {
+  width: 700px;
+  height: 670px;
+  position: absolute;
+  bottom:0px;
+  right: -150px;
+}
+
+.form {
+  margin-top: 100px;
+  width: 408px;
+}
+
+.google-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  height: 56px;
+  width: 100%;
+  border-radius: 30px;
+  border: none;
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 60%);
+  transition: background-color 167ms ease-in-out;
+}
+
+.google-btn img {
+  margin-right: 25px;
+}
+
+.google-btn:hover {
+  background-color: rgba(207, 207, 207, 0.25);
+  color: rgba(0, 0, 0, 0.75);
+  box-shadow: inset 0 0 0 2px rgb(0 0 0 / 60%);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav > a img {
+    padding: 0 5px;
+  }
+
+  .section {
+    flex-direction: column;
+  }
+
+  .hero h1 {
+    width: 100%;
+    
+    font-size: 20px;
+    line-height: 2;
+  }
+
+  .hero img {
+    position: static;
+    width: auto;
+    height: auto;
+    margin-top: 20px;
+  }
+
+  .form {
+    margin: 20px auto 0;
+  }
+  #job-finder{
+    width:80px;
+    height: 80px;
+margin: 0 auto;
+    display: block;
+
+  }
+  .nav-links{
+    display: block;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="nav">
+      <a href="/">
+        <img src="images/job-finder-logo-vector.jpg" alt="Logo" id="job-finder" />
+      </a>
+      <div class="nav-links">
+        <a href="signup.html" class="join">Join Now</a>
+        <a href="loginpage.html" class="sign-in">Sign In</a>
+      </div>
+    </nav>
+
+    <section class="section">
+      <div class="hero">
+        <h1>Welcome to your professional community</h1>
+        <img src="images/login-hero.svg" alt="Hero Image" />
+      </div>
+      <div class="form">
+        <button class="google-btn" onclick="signInWithGoogle()">
+          <img src="images/google.svg" alt="Google Logo" />
+          Sign in with Google
+        </button>
+      </div>
+    </section>
+  </div>
+  <script src="auth.js"type="module"></script>
+  <script src="script.js"type="module"></script>
+</body>
+</html>
