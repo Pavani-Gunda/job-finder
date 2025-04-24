@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Chat - Job Finder</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+    @media (max-width: 768px) {
+      .notification {
+        flex-direction: column;
+        padding: 10px;
+        
+        img {
+          margin-bottom: 8px;
+        }
+      }
+    }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-4">
+      <h3>Chat</h3>
+      <div id="chatBox" class="border p-3 mb-3" style="height: 300px; overflow-y: scroll;"></div>
+      <div id="typingIndicator" style="display:none; color:gray; font-style:italic;">Typing...</div>
+
+      <form id="chatForm">
+        <input type="text" id="chatInput" class="form-control mb-2" placeholder="Type your message..." required>
+        <button class="btn btn-primary">Send</button>
+
+      </form>
+    </div>
+  
+  
+    <script src="firebaseconfig.js"></script>
+    
+      <script>
+      // Assumes Firebase and Firestore are already initialized
+const chatForm = document.getElementById('chatForm');
+const chatBox = document.getElementById('chatMessages');
+let currentChatUserId = null;
+let typingTimeout = null;
+
+// Open chat with a specific user
+function openChatWith(userId, userName) {
+  currentChatUserId = userId;
+  document.getElementById("chatModal").style.display = "block";
+  document.getElementById("chatUserName").textContent = userName;
+  loadMessages(userId);
+}
+
+// Load messages from Firestore
+function loadMessages(receiverId) {
+  const chatId = [auth.currentUser.uid, receiverId].sort().join("_");
+  const messagesRef = collection(db, "chats", chatId, "messages");
+  const q = query(messagesRef, orderBy("createdAt"));
+
+  onSnapshot(q, (snapshot) => {
+    chatBox.innerHTML = "";
+    snapshot.forEach(doc => {
+      const msg = doc.data();
+      const messageEl = document.createElement("div");
+      messageEl.className = msg.senderId === auth.currentUser.uid ? "my-message" : "their-message";
+      // Show timestamp
+      const time = msg.createdAt?.toDate ? msg.createdAt.toDate() : new Date();
+      const timeStr = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      messageEl.innerHTML = `<span>${msg.text}</span><span class="timestamp">${timeStr}</span>`;
+      chatBox.appendChild(messageEl);
+    });
+    // Auto-scroll to latest message
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
+}
+
+// Send message (on button click or Enter)
+async function sendMessage() {
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+  if (!text) return;
+
+  const chatId = [auth.currentUser.uid, currentChatUserId].sort().join("_");
+  const messagesRef = collection(db, "chats", chatId, "messages");
+
+  await addDoc(messagesRef, {
+    senderId: auth.currentUser.uid,
+    receiverId: currentChatUserId,
+    text,
+    createdAt: serverTimestamp()
+  });
+
+  input.value = "";
+  setTyping(false); // Reset typing indicator
+}
+
+// Typing indicator logic
+function setTyping(isTyping) {
+  const chatId = [auth.currentUser.uid, currentChatUserId].sort().join("_");
+  const typingRef = doc(db, "chats", chatId, "typing", auth.currentUser.uid);
+  setDoc(typingRef, { typing: isTyping }, { merge: true });
+}
+
+// Listen for typing indicator
+function listenForTyping() {
+  const chatId = [auth.currentUser.uid, currentChatUserId].sort().join("_");
+  const typingRef = doc(db, "chats", chatId, "typing", currentChatUserId);
+  onSnapshot(typingRef, (docSnap) => {
+    if (docSnap.exists() && docSnap.data().typing) {
+      document.getElementById("typingIndicator").style.display = "block";
+    } else {
+      document.getElementById("typingIndicator").style.display = "none";
+    }
+  });
+}
+
+// Event listeners
+document.getElementById("sendMessageBtn").addEventListener("click", sendMessage);
+
+document.getElementById("chatInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  } else {
+    setTyping(true);
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => setTyping(false), 2000);
+  }
+});
+
+chatForm.addEventListener('submit', e => {
+  e.preventDefault();
+  sendMessage();
+});
+
+// Call listenForTyping() after opening a chat
+function openChatWith(userId, userName) {
+  currentChatUserId = userId;
+  document.getElementById("chatModal").style.display = "block";
+  document.getElementById("chatUserName").textContent = userName;
+  loadMessages(userId);
+  listenForTyping();
+}
+// Call this function when the user clicks on a chat
+ openChatWith('userId', 'User Name'); // Replace 'userId' and 'User Name' with actual values
+      </script>
+  </body>
+  </html>
