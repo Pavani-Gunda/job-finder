@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Post a Job - Job Finder</title>
+  <style>
+    body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  padding: 20px;
+}
+
+.container {
+  background: #fff;
+  max-width: 500px;
+  margin: auto;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ccc;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+#message {
+  text-align: center;
+  margin-top: 15px;
+  color: green;
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Post a Job</h2>
+    <form id="jobPostForm">
+      <input type="text" id="title" placeholder="Job Title" required>
+      <input type="text" id="company" placeholder="Company Name" required>
+      <input type="text" id="location" placeholder="Location" required>
+      <input type="text" id="type" placeholder="Job Type (Full-time, Part-time)" required>
+      <textarea id="description" placeholder="Job Description" required></textarea>
+      <button type="submit">Post Job</button>
+      <p id="message"></p>
+    </form>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js"></script>
+
+  <script src="firebase-config.js"></script>
+  <script type="module">
+  import {
+    collection,
+    addDoc,
+    serverTimestamp
+  } from "firebasconfig.js";
+  
+  const jobPostForm = document.getElementById("jobPostForm");
+  const message = document.getElementById("message");
+  
+  jobPostForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+  
+    const title = document.getElementById("title").value;
+    const company = document.getElementById("company").value;
+    const location = document.getElementById("location").value;
+    const type = document.getElementById("type").value;
+    const description = document.getElementById("description").value;
+  
+    try {
+      await addDoc(collection(window.db, "jobs"), {
+        title,
+        company,
+        location,
+        type,
+        description,
+        postedAt: serverTimestamp()
+      });
+  
+      message.textContent = "Job posted successfully!";
+      jobPostForm.reset();
+    } catch (error) {
+      message.style.color = "red";
+      message.textContent = "Error posting job: " + error.message;
+    }
+  });
+  </script>
+</body>
+</html>
