@@ -1,0 +1,1121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Job Finder - Home</title>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM8d7x1z5l5e5c5e5e5e5e5e5e5e5e5e5e5e5" crossorigin="anonymous" />
+  <!-- Include Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+
+
+
+  <style>
+    *{
+      margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f3f2ef;
+}
+
+.container {
+  background-color: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  height: 100%;
+  max-width: 1128px;
+}
+
+.logo #job-finder {
+  margin-right: 8px;
+  width: 60px;
+  height: 60px;
+}
+
+.search {
+  flex-grow: 1;
+  position: relative;
+}
+
+.search input {
+  background-color: #eef3f8;
+  border: none;
+  border-radius: 2px;
+  color: rgba(0, 0, 0, 0.9);
+  width: 218px;
+  height: 34px;
+  padding: 0 8px 0 40px;
+  font-size: 14px;
+}
+
+.search-icon {
+  width: 40px;
+  position: absolute;
+  top: 10px;
+  left: 5px;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+nav {
+  margin-left: auto;
+}
+
+.nav-list-wrap {
+  display: flex;
+  list-style: none;
+}
+
+.nav-list {
+  display: flex;
+  align-items: center;
+}
+
+.nav-list a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 52px;
+  min-width: 80px;
+  text-decoration: none;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.nav-list:hover a span {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.nav-list.active span::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.9);
+}
+
+.user a img {
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+}
+
+.signout {
+  display: none;
+  position: absolute;
+  top: 45px;
+  background: white;
+  width: 100px;
+  height: 40px;
+  border-radius: 0 0 5px 5px;
+  font-size: 16px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  z-index: 15;
+}
+
+.user:hover .signout {
+  display: flex;
+}
+
+.signout-mobile {
+  display: none;
+}
+
+.homepage {
+  display: flex;
+  padding: 20px;
+ flex-direction: column;
+  align-items: left;
+   margin: 20px;
+
+   font-size: 1rem;
+   position: relative;
+} 
+
+.container-left {
+justify-content: left;
+  width: 225px;
+  margin-top: 20px;
+  padding-left: 2rem;
+}
+
+.art-card {
+  text-align: center;
+  overflow: hidden;
+  margin-bottom: 8px;
+  border-radius: 5px;
+  background-color: #fff;
+  transition: box-shadow 83ms;
+  position: relative;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 15%), 0 0 0 rgb(0 0 0 / 20%);
+}
+
+.user-info {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 12px 12px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+
+.card-background {
+  background: url("/images/card-bg.svg") center / 462px no-repeat;
+  height: 35px;
+  
+}
+.photo {
+  width: 72px;
+  height: 72px;
+  background-color: #fff;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 2px solid white;
+  margin: 0 auto;
+  border-radius: 50%;
+}
+
+.link {
+  font-size: 16px;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.9);
+  font-weight: 600;
+}
+
+.add-photo-text {
+  color: #0a66c2;
+  margin-bottom: 1px;
+  font-size: 16px;
+  align-items: flex-start;
+  
+}
+
+.widget {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 12px 0;
+}
+
+.widget > a {
+  text-decoration: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 12px;
+}
+
+.item {
+  display: block;
+  text-align: left;
+  padding: 12px;
+  font-size: 12px;
+}
+
+.community-card {
+  text-align: left;
+  padding: 8px 0 0;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 15%), 0 0 0 rgb(0 0 0 / 20%);
+  ;
+}
+
+.community-card a {
+  color: #000;
+  padding: 4px 12px;
+  font-size: 12px;
+  text-decoration: none;
+  display: block;
+  font-size: 1rem;
+}
+
+/*post modals*/
+.box-container {
+      
+      width: 800px;
+    margin: 10px;
+    
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: absolute;
+      left: 20%;
+      top: 15%
+  }
+  
+  .share-box {
+      display: flex;
+      flex-direction: column;
+      
+  }
+  
+   .box-2 {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2px;
+  } 
+  
+  .user-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+  }
+  
+  #startPostBtn {
+      padding: 8px 16px;
+      font-size: 14px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+  }
+  
+  .post-options {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+  }
+  
+  .option-btn {
+      background-color: transparent;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+  }
+  
+  .option-btn img {
+      width: 30px;
+      height: 30px;
+      margin-bottom: 5px;
+  }
+  
+  #postModal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .modal-content {
+      background-color: white;
+      margin: 15% auto;
+      padding: 20px;
+      width: 50%;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .close-btn {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      position: absolute;
+      right: 15px;
+      top: 10px;
+      cursor: pointer;
+  }
+  
+  .close-btn:hover,
+  .close-btn:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+  }
+  
+  .modal-body textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+  }
+  
+  .modal-body input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+  }
+  
+  .modal-body button {
+      padding: 8px 16px;
+      border-radius: 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+  }
+  
+   #postsContainer {
+      margin-top: 20px;
+  } 
+  
+  .post {
+      background-color: #fff;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .post .post-description {
+      margin-bottom: 10px;
+  }
+  
+  .post img,
+  .post video {
+      max-width: 100%;
+      border-radius: 8px;
+  }
+
+/*rightbar*/
+    
+.right-container {
+  width: 100%;
+  max-width: 320px;
+  margin-right: 16px;
+    padding: 16px;
+    position: absolute;
+    bottom : 20%;
+    right: 10px;
+
+
+}
+
+ @media (min-width: 768px) {
+  .right-container {
+    max-width: 300px;
+  }
+} 
+
+.follow-card, .banner-card {
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15), 0 0 0 rgba(0, 0, 0, 0.2);
+  margin-bottom: 12px;
+  padding: 16px;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.feed-list {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+}
+
+.feed-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.feed-list li a {
+  margin-right: 8px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  background-image: url("https://static-exp1.licdn.com/sc/h/1b4vl1r54ijmrmcyxzoidwmxs");
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+}
+
+.feed-list button {
+  background-color: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  border-radius: 15px;
+  padding: 4px 12px;
+  font-weight: 600;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.feed-list button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.recommendation {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #0a66c2;
+  text-decoration: none;
+  margin-top: 12px;
+}
+
+.recommendation img {
+  margin-left: 5px;
+  width: 16px;
+}
+
+.banner-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+/* loading */
+h2 {
+  margin: 0;
+}
+
+/* Article container */
+.article-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 60%;
+  max-width: 800px;
+}
+
+/* Article card styling */
+.article-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.article-card h2 {
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.article-card p {
+  color: #555;
+  font-size: 1rem;
+}
+
+/* Loading spinner */
+.loading {
+  font-size: 24px;
+  color: #333;
+  text-align: center;
+  padding: 20px;
+  display: none;
+}
+/* Small devices (phones) */
+@media (max-width: 576px) {
+  .content {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 10px;
+  }
+
+  .search input {
+    width: 100%;
+    padding-left: 35px;
+  }
+
+  .nav-list-wrap {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .nav-list a {
+    min-width: 60px;
+    font-size: 10px;
+  }
+
+  .box-container {
+    width: 95%;
+    left: 2.5%;
+    top: 10%;
+    padding: 15px;
+  }
+
+  .modal-content {
+    width: 90%;
+    margin: 30% auto;
+  }
+
+  .right-container {
+    position: static;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .container-left {
+    padding-left: 1rem;
+    width: 100%;
+  }
+
+  .homepage {
+    padding: 10px;
+    margin: 0;
+  }
+
+  .article-container {
+    width: 100%;
+  }
+}
+
+/* Medium devices (tablets) */
+@media (max-width: 768px) {
+  .content {
+    padding: 0 16px;
+  }
+
+  .box-container {
+    width: 90%;
+    left: 5%;
+    top: 10%;
+  }
+
+  .modal-content {
+    width: 80%;
+    margin: 20% auto;
+  }
+
+  .right-container {
+    position: static;
+    width: 100%;
+    margin: 20px auto;
+  }
+
+  .article-container {
+    width: 90%;
+  }
+
+  .container-left {
+    width: 100%;
+    padding-left: 1rem;
+  }
+}
+
+
+
+
+
+
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+<div class="container">
+    <div class="content">
+      <span class="logo">
+        <a href="feed.html">
+          <img src="/images/job-finder-logo-vector.jpg" alt="Logo" id="job-finder"/>
+        </a>
+      </span>
+
+      <div class="search">
+        <input type="text" placeholder="Search" />
+        <div class="search-icon">
+          <img src="/images/search-icon.svg" alt="Search" />
+        </div>
+      </div>
+     
+
+      <div class="signout-mobile" onclick="handleSignOut()"><a href="login.html">Sign Out</a></div>
+
+      <nav id ="navMenu">
+        <ul class="nav-list-wrap">
+          <li class="nav-list active">
+            <a href="feed.html"><img src="/images/nav-home.svg" alt="Home" /><span>Home</span></a>
+          </li>
+          <li class="nav-list"><a href="#"><img src="/images/nav-network.svg" alt="Network" /><span>My Network</span></a></li>
+          <li class="nav-list"><a href="job-board.html"><img src="/images/nav-jobs.svg" alt="Jobs" /><span>Jobs</span></a></li>
+          <li class="nav-list"><a href="chat.html"><img src="/images/nav-messaging.svg" alt="Messaging" /><span>Messaging</span></a></li>
+          <li class="nav-list"><a href="notification.html"><img src="/images/nav-notifications.svg" alt="Notifications" /><span>Notifications</span></a></li>
+          <li class="nav-list user" onmouseenter="showSignOut()" onmouseleave="hideSignOut()">
+            <a href="profile.html"><img src="/images/user.svg" alt="Me" /><span>Me <img src="/images/down-icon.svg" alt="Down" /></span></a>
+            <div class="signout" onclick="handleSignOut()"><a href="login.html">Sign Out</a></div>
+          </li>
+          <li class="nav-list work">
+            <a href="index.html"><img src="/images/nav-work.svg" alt="Work" /><span>Work <img src="/images/down-icon.svg" alt="Down" /></span></a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Main Homepage -->
+  <div class="homepage">
+    <div class="container-left">
+      <div class="art-card">
+        <div class="user-info">
+          <div class="card-background"></div>
+          <a href="profile.html">
+            <div class="photo" id="user-photo"></div>
+            <div class="link" id="user-name">Welcome, there!</div>
+          </a>
+          <a href=""><div class="add-photo-text">Add a photo</div></a>
+        </div>
+        <div class="widget">
+          <a href="network.html"><div><span>Connections</span><span>Grow Your Network</span></div><img src="/images/widget-icon.svg" alt="" /></a>
+        </div>
+        <a class="item" href="myitems.html"><span style="font-size: 1rem;"><img src="/images/item-icon.svg" alt="" />My Items</span></a>
+      </div>
+
+      <div class="community-card">
+        <a href="groups.html"><span>Groups</span></a>
+        <a href="events.html"><span>Events <img src="/images/plus-icon.svg" alt="+" /></span></a>
+        <a href="hashtags.html"><span>Follow Hashtags</span></a>
+        <a href="discover.html"><span>Discover More</span></a>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!--  post modal-->
+  <div class="box-container">
+    <div class="share-box">
+        <div class="box-2">
+            <img src="/images/user.svg" alt="User" class="user-img">
+            <button id="startPostBtn">Start a post</button>
+        </div>
+        <div class="post-options">
+            <button class="option-btn"id="photoInput">
+                <img src="/images/photo-icon.svg" alt="Photo Icon">
+                <span>Photo</span>
+            </button>
+            <button class="option-btn"id="videoInput">
+                <img src="/images/share-video.svg" alt="Video Icon">
+                <span>Video</span>
+            </button>
+            <button class="option-btn"id="eventInput">
+                <img src="/images/event-icon.svg" alt="Event Icon">
+                <span>Event</span>
+            </button>
+            <button class="option-btn"id="articleInput">
+                <img src="/images/share-note.svg" alt="Article Icon">
+                <span>Write article</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="postModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModalBtn" class="close-btn"></span>
+           
+            <div class="modal-body">
+                <a href="index.html"<i class="bi bi-x"></i></a>
+                <textarea id="postDescription" placeholder="What's on your mind?"></textarea>
+                <input type="file" id="fileInput" accept="image/*,video/*">
+                <button  id="submitPostBtn"onclick="()">Post</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="postsContainer" class="posts-container">
+        <!-- Posts will appear here dynamically -->
+    </div>
+</div>
+
+
+
+
+<!-- Right Container -->
+
+ 
+<div class="right-container">
+  <div class="follow-card">
+    <div class="title">
+      <h2>Add to your feed</h2>
+      <img src="/images/feed-icon.svg" alt="">
+    </div>
+    <ul class="feed-list">
+      <li>
+        <a href="index.html">
+          <div class="avatar"></div>
+        </a>
+        <div>
+          <span>#job-finder</span>
+          <button>Follow</button>
+        </div>
+      </li>
+      <li>
+        <a href="index.html">
+          <div class="avatar"></div>
+        </a>
+        <div>
+          <span>#video</span>
+          <button>Follow</button>
+        </div>
+      </li>
+    </ul>
+    <a class="recommendation" href="index.html">
+      View all recommendation
+      <img src="/images/right-icon.svg" alt="">
+    </a>
+  </div>
+
+  <div class="banner-card">
+    <img src="https://vigilconnect.com.au/wp-content/uploads/2023/05/jobseeker.jpg"alt="">
+  </div>
+</div>
+
+<!-- loading -->
+<div id="article-container" class="article-container">
+  <!-- Articles will be inserted here dynamically -->
+</div>
+
+<div id="loading" class="loading">Loading...</div>
+
+ 
+  
+  <script type="module">
+
+// User Info and Sign Out Logic
+const User = {
+  displayName: "Pavani G",
+  photoURL: "/images/201634.png",
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("user-name").textContent = `Welcome , ${User.displayName}!`;
+  document.getElementById("user-photo").style.backgroundImage = `url(${User.photoURL || "/images/201634.png"})`;
+
+  document.getElementById("startPostBtn").addEventListener("click", openPostModal);
+  document.getElementById("closeModalBtn").addEventListener("click", closePostModal);
+  document.getElementById("submitPostBtn").addEventListener("click", submitPost);
+
+  document.querySelectorAll('.feed-list button').forEach(button => {
+    button.addEventListener('click', () => {
+      button.textContent = button.textContent === 'Follow' ? 'Following' : 'Follow';
+    });
+  });
+
+  renderPosts();
+});
+
+function handleSignOut() {
+  alert("Sign out clicked");
+  // TODO: Add Firebase sign out logic here
+}
+
+function showSignOut() {
+  document.querySelector(".signout").style.display = "flex";
+}
+
+function hideSignOut() {
+  document.querySelector(".signout").style.display = "none";
+}
+
+// Post Modal Logic
+let posts = [];
+
+function openPostModal() {
+  document.getElementById("postModal").style.display = "block";
+}
+
+function closePostModal() {
+  document.getElementById("postModal").style.display = "none";
+}
+
+function submitPost() {
+  const description = document.getElementById("postDescription").value;
+  const file = document.getElementById("fileInput").files[0];
+
+  if (!description) {
+    alert("Please add a description!");
+    return;
+  }
+
+  const post = {
+    id: generateId(),
+    description: description,
+    media: file ? URL.createObjectURL(file) : null,
+    type: file ? file.type.split("/")[0] : null,
+    timeStamp: new Date()
+  };
+
+  posts.unshift(post);
+  renderPosts();
+  closePostModal();
+  clearPostForm();
+}
+
+function clearPostForm() {
+  document.getElementById("postDescription").value = "";
+  document.getElementById("fileInput").value = "";
+}
+
+function deletePost(index) {
+  posts.splice(index, 1);
+  renderPosts();
+}
+
+function generateId() {
+  return '_' + Math.random().toString(36).substr(2, 9);
+}
+
+const likes = {};
+const comments = {};
+
+function renderPosts() {
+  const container = document.getElementById("postsContainer");
+  container.innerHTML = "";
+
+  posts.forEach((post, index) => {
+    const postElement = document.createElement("div");
+    postElement.classList.add("post");
+
+    const closeButton = document.createElement("span");
+    closeButton.classList.add("close-post-btn");
+    closeButton.textContent = "x";
+    closeButton.addEventListener("click", () => deletePost(index));
+
+    const descriptionElement = document.createElement("p");
+    descriptionElement.classList.add("post-description");
+    descriptionElement.innerText = post.description;
+
+    const mediaElement = document.createElement(post.type === "image" ? "img" : "video");
+    if (post.type === "image") {
+      mediaElement.src = post.media;
+    } else {
+      mediaElement.src = post.media;
+      mediaElement.controls = true;
+    }
+
+    const likeSection = document.createElement("div");
+    likeSection.innerHTML = `
+      <button onclick="likePost('${post.id}')">❤️ Like</button>
+      <span id="like-count-${post.id}">${(likes[post.id] || []).length}</span> likes
+    `;
+
+    const commentSection = document.createElement("div");
+    commentSection.innerHTML = `
+      <input type="text" id="comment-input-${post.id}" placeholder="Add a comment" />
+      <button onclick="postComment('${post.id}')">Comment</button>
+      <div id="comments-${post.id}" class="comments">
+        ${(comments[post.id] || []).map(c => `<p><strong>${c.name}:</strong> ${c.comment}</p>`).join('')}
+      </div>
+    `;
+
+    postElement.appendChild(closeButton);
+    postElement.appendChild(descriptionElement);
+    postElement.appendChild(mediaElement);
+    postElement.appendChild(likeSection);
+    postElement.appendChild(commentSection);
+
+    container.appendChild(postElement);
+  });
+}
+
+function likePost(postId) {
+  const userId = "demoUser";
+  likes[postId] = likes[postId] || [];
+  const index = likes[postId].indexOf(userId);
+  if (index > -1) {
+    likes[postId].splice(index, 1);
+  } else {
+    likes[postId].push(userId);
+  }
+  document.getElementById(`like-count-${postId}`).innerText = likes[postId].length;
+}
+
+function postComment(postId) {
+  const input = document.getElementById(`comment-input-${postId}`);
+  const commentText = input.value;
+  if (!commentText) return;
+
+  comments[postId] = comments[postId] || [];
+  comments[postId].push({ name: "Anonymous", comment: commentText });
+
+  input.value = "";
+  renderPosts();
+}
+// // Initial render on page load
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyCRci1cHDflH9G_u7kLaE2zhY9n0Yzbko0",
+  authDomain: "job-finder-14951.firebaseapp.com",
+  projectId: "job-finder-14951",
+  storageBucket: "job-finder-14951.firebasestorage.app",
+  messagingSenderId: "19924450070",
+  appId: "1:19924450070:web:b213f414ba94d809c32e37"
+};
+
+//firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
+const provider = new firebase.auth.GoogleAuthProvider();
+
+const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const postForm = document.getElementById("post-form");
+const feed = document.getElementById("feed");
+
+// Sign in
+loginBtn.onclick = () => {
+  auth.signInWithPopup(provider).then(result => {
+    const user = result.user;
+    showUI(user);
+  });
+};
+
+// Sign out
+logoutBtn.onclick = () => {
+  auth.signOut().then(() => showUI(null));
+};
+
+// Check auth state
+auth.onAuthStateChanged(user => {
+  showUI(user);
+  if (user) loadArticles();
+});
+
+function showUI(user) {
+  if (user) {
+    loginBtn.style.display = "none";
+    logoutBtn.style.display = "inline";
+    postForm.style.display = "block";
+  } else {
+    loginBtn.style.display = "inline";
+    logoutBtn.style.display = "none";
+    postForm.style.display = "none";
+  }
+}
+
+// Post article
+document.getElementById("submitPost").onclick = async () => {
+  const user = auth.currentUser;
+  const description = document.getElementById("descriptionInput").value;
+  const video = document.getElementById("videoInput").value;
+  const image = document.getElementById("imageInput").files[0];
+
+  let imageURL = "";
+  if (image) {
+    const storageRef = storage.ref(`images/${image.name}`);
+    await storageRef.put(image);
+    imageURL = await storageRef.getDownloadURL();
+  }
+
+  db.collection("articles").add({
+    actor: {
+      title: user.displayName,
+      description: user.email,
+      image: user.photoURL,
+      date: new Date().toISOString()
+    },
+    description,
+    video,
+    sharedImg: imageURL,
+    likes: { count: 0, whoLiked: [] },
+    comments: 0
+  });
+
+  document.getElementById("descriptionInput").value = "";
+  document.getElementById("videoInput").value = "";
+  document.getElementById("imageInput").value = "";
+};
+
+// Load articles
+function loadArticles() {
+  db.collection("articles").orderBy("actor.date", "desc").onSnapshot(snapshot => {
+    feed.innerHTML = "";
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const post = document.createElement("div");
+      post.className = "post";
+      post.innerHTML = `
+        <h3>${data.actor.title}</h3>
+        <p>${data.description}</p>
+        ${data.sharedImg ? `<img src="${data.sharedImg}" width="100%" />` : ""}
+        ${data.video ? `<iframe width="100%" src="${data.video}" frameborder="0" allowfullscreen></iframe>` : ""}
+      `;
+      feed.appendChild(post);
+    });
+  });
+}
+
+
+
+// Load articles on page load
+document.addEventListener("DOMContentLoaded", function () {
+  const articleContainer = document.getElementById("article-container");
+  const loading = document.getElementById("loading");
+
+  // Simulate loading articles
+  function fetchArticles() {
+    loading.style.display = "block"; // Show loading spinner
+
+    setTimeout(() => {
+      const articles = [
+        { id: 1, title: "Article 1", content: "Content for article 1" },
+        { id: 2, title: "Article 2", content: "Content for article 2" },
+        { id: 3, title: "Article 3", content: "Content for article 3" },
+      ];
+
+      displayArticles(articles);
+    }, 2000); // Simulate a 2-second delay for fetching articles
+  }
+
+  // Display the fetched articles
+  function displayArticles(articles) {
+    loading.style.display = "none"; // Hide loading spinner
+    articleContainer.innerHTML = ''; // Clear any existing content
+
+    articles.forEach((article) => {
+      const articleCard = document.createElement("div");
+      articleCard.classList.add("article-card");
+      articleCard.innerHTML = `
+        <h2>${article.title}</h2>
+        <p>${article.content}</p>
+      `;
+      articleContainer.appendChild(articleCard);
+    });
+  }
+
+  fetchArticles(); // Call the fetchArticles function on page load
+});
+
+
+</script>
+</body>
+</html>
+
