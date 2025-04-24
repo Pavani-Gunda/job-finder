@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notification</title>
+  <style>.notifications-container {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin: 20px auto;
+  }
+  
+  .notifications-header {
+    padding: 16px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .notifications-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .notification-item {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s;
+  }
+  
+  .notification-item.unread {
+    background: #f3fafd;
+  }
+  
+  .notification-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+  }
+  
+  .notification-content {
+    flex-grow: 1;
+  }
+  
+  @media (max-width: 768px) {
+    .notifications-container {
+      margin: 10px;
+      border-radius: 0;
+    }
+    
+    .notification-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  </style>
+</head>
+<body>
+  <div class="notifications-container">
+    <div class="notifications-header">
+      <h3>Notifications</h3>
+      <button id="markAllRead">Mark all as read</button>
+    </div>
+    
+    <ul class="notifications-list">
+      <!-- Dynamic content from Firebase -->
+    </ul>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="firebaseconfig.js"></script>
+ <script type="module">// Initialize Firebase
+  const firebaseConfig = {
+  apiKey: "AIzaSyCRci1cHDflH9G_u7kLaE2zhY9n0Yzbko0",
+  authDomain: "job-finder-14951.firebaseapp.com",
+  projectId: "job-finder-14951",
+  storageBucket: "job-finder-14951.firebasestorage.app",
+  messagingSenderId: "19924450070",
+  appId: "1:19924450070:web:b213f414ba94d809c32e37"
+};
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  
+  // Real-time notifications listener
+  function initNotifications(userId) {
+    const notificationsList = document.querySelector('.notifications-list');
+    
+    db.collection('notifications')
+      .where('userId', '==', userId)
+      .orderBy('timestamp', 'desc')
+      .onSnapshot(snapshot => {
+        notificationsList.innerHTML = '';
+        snapshot.forEach(doc => {
+          const notification = doc.data();
+          const item = document.createElement('li');
+          item.className = `notification-item ${notification.read ? '' : 'unread'}`;
+          item.innerHTML = `
+            <img src="${notification.icon}" class="notification-icon">
+            <div class="notification-content">
+              <p>${notification.message}</p>
+              <small>${new Date(notification.timestamp).toLocaleString()}</small>
+            </div>
+          `;
+          notificationsList.appendChild(item);
+        });
+      });
+  }
+  
+  // Mark as read functionality
+  document.getElementById('markAllRead').addEventListener('click', () => {
+    const batch = db.batch();
+    
+    db.collection('notifications')
+      .where('read', '==', false)
+      .get()
+      .then(snapshot => {
+        snapshot.forEach(doc => {
+          batch.update(doc.ref, { read: true });
+        });
+        return batch.commit();
+      });
+  });
+  function sendNotification(receiverId, message) {
+  db.collection('notifications').add({
+    userId: receiverId,
+    message: message,
+    read: false,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  });
+}
+
+ 
+  
+  </script>
+</body>
+</html>
