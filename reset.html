@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>reset</title>
+  <style>
+    *{
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body{
+      font-family: Arial, sans-serif;
+      background-color: #f3f2ef;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    #resetForm{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #fff;
+      padding: 20px;
+      gap: 10px;
+      border-radius: 5px;
+      
+    }
+    input{
+      width: 300px;
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button{
+      background-color: #0a66c2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover{
+      background-color: #004182;
+    }
+  </style>
+</head>
+<body>
+  <h2>Reset Password</h2>
+  <form id="resetForm">
+    <input type="email" id="resetEmail" placeholder="Enter your email" required />
+    <button type="submit"> Reset Link</button>
+  </form>
+  <p><a href="index.html">Back to login</a></p>
+
+  <script src="script.js"type="module"></script>
+</body>
+</html>
